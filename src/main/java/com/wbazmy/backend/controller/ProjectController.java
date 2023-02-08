@@ -27,7 +27,7 @@ public class ProjectController {
     @Resource
     private ProjectService projectService;
 
-    @PostMapping("/page")
+    @GetMapping("/page")
     @ResponseBody
     public ResponseResult<PageInfo<ProjectDto>> pageProject(@RequestParam Integer pageNum, @RequestParam Integer pageSize) {
         if (Objects.isNull(pageNum) || Objects.isNull(pageSize)) {
