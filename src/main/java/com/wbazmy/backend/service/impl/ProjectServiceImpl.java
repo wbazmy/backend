@@ -36,11 +36,12 @@ public class ProjectServiceImpl implements ProjectService {
         String userName = UserContextUtil.getCurrentUserName();
         Long userId = userRepository.findByUserName(userName).getId();
         project.setUserId(userId);
-        Project oldProject = projectRepository.findByProjectName(project.getProjectName());
+        Project oldProject = projectRepository.findByProjectNameAndUserId(project.getProjectName(), userId);
         if (oldProject != null) {
             return null;
         }
         projectRepository.save(project);
+        project = projectRepository.findByProjectNameAndUserId(project.getProjectName(), userId);
         ProjectDto projectDto = new ProjectDto();
         BeanUtils.copyProperties(project, projectDto);
         // todo 在此还要从github拉取项目到本地
@@ -63,19 +64,19 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     public ProjectDto updateProject(Project project) {
         Project oldProject = projectRepository.findById(project.getId());
+        String userName = UserContextUtil.getCurrentUserName();
+        Long userId = userRepository.findByUserName(userName).getId();
         if (oldProject == null) {
             return null;
         }
-        if (!Objects.equals(project.getProjectName(), oldProject.getProjectName())) {
-            Project oldProject1 = projectRepository.findByProjectName(project.getProjectName());
+        if (!Objects.isNull(project.getProjectName()) && !Objects.equals(project.getProjectName(), oldProject.getProjectName())) {
+            Project oldProject1 = projectRepository.findByProjectNameAndUserId(project.getProjectName(), userId);
             if (oldProject1 != null) {
                 return null;
             }
         }
-        String userName = UserContextUtil.getCurrentUserName();
-        Long userId = userRepository.findByUserName(userName).getId();
-        project.setUserId(userId);
         projectRepository.updateByProjectId(project);
+        project = projectRepository.findById(project.getId());
         ProjectDto projectDto = new ProjectDto();
         BeanUtils.copyProperties(project, projectDto);
         return projectDto;

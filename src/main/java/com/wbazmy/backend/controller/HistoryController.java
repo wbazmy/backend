@@ -41,7 +41,12 @@ public class HistoryController {
             log.info("参数不足");
             return ResponseResult.fail(ResponseCode.MISSCONTENT.getCode(), ResponseCode.MISSCONTENT.getMsg());
         }
-        return ResponseResult.success(historyService.getHistory(historyId));
+        History history = historyService.getHistory(historyId);
+        if (Objects.isNull(history)) {
+            log.info("历史记录不存在");
+            return ResponseResult.fail(ResponseCode.HISTORYNOTEXIST.getCode(), ResponseCode.HISTORYNOTEXIST.getMsg());
+        }
+        return ResponseResult.success(history);
     }
 
     @PostMapping("/delete")
@@ -51,7 +56,10 @@ public class HistoryController {
             log.info("参数不足");
             return ResponseResult.fail(ResponseCode.MISSCONTENT.getCode(), ResponseCode.MISSCONTENT.getMsg());
         }
-        historyService.deleteHistory(historyId);
+        if (!historyService.deleteHistory(historyId)) {
+            log.info("历史记录不存在，删除失败");
+            return ResponseResult.fail(ResponseCode.HISTORYNOTEXIST.getCode(), ResponseCode.HISTORYNOTEXIST.getMsg());
+        }
         return ResponseResult.success();
     }
 }

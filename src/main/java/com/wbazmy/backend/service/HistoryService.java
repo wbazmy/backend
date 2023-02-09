@@ -13,7 +13,7 @@ public interface HistoryService {
 
     PageInfo<History> pageHistory(Long projectId, Integer pageNum, Integer pageSize);
 
-    void deleteHistory(Long id);
+    Boolean deleteHistory(Long id);
 
     History getHistory(Long id);
 }

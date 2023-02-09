@@ -66,12 +66,8 @@ public class UserController {
 
     @GetMapping("/info")
     @ResponseBody
-    public ResponseResult<UserDto> userInfo(@RequestParam String userName) {
-        if (!Objects.equals(userName, UserContextUtil.getCurrentUserName())) {
-            log.info("只能查询当前登录用户的信息");
-            return ResponseResult.fail(ResponseCode.ILLEGALACCESS.getCode(), ResponseCode.ILLEGALACCESS.getMsg());
-        }
-        UserDto userDto = userService.userInfo(userName);
+    public ResponseResult<UserDto> userInfo() {
+        UserDto userDto = userService.userInfo(UserContextUtil.getCurrentUserName());
         if (userDto == null) {
             log.info("用户名不存在");
             return ResponseResult.fail(ResponseCode.USERNOTEXIST.getCode(), ResponseCode.USERNOTEXIST.getMsg());
@@ -82,10 +78,7 @@ public class UserController {
     @PostMapping("/update")
     @ResponseBody
     public ResponseResult<UserDto> userUpdate(@RequestBody User user) {
-        if (!Objects.equals(user.getUserName(), UserContextUtil.getCurrentUserName())) {
-            log.info("只能修改当前登录用户的信息");
-            return ResponseResult.fail(ResponseCode.ILLEGALACCESS.getCode(), ResponseCode.ILLEGALACCESS.getMsg());
-        }
+        user.setUserName(UserContextUtil.getCurrentUserName());
         UserDto userDto = userService.userUpdate(user);
         if (userDto == null) {
             log.info("用户名不存在");
@@ -93,6 +86,5 @@ public class UserController {
         }
         log.info(userDto.getUserName() + "更新成功");
         return ResponseResult.success(userDto);
-
     }
 }

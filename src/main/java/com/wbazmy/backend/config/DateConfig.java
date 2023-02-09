@@ -17,7 +17,7 @@ public class DateConfig implements MetaObjectHandler {
     public void insertFill(MetaObject metaObject) {
         this.strictInsertFill(metaObject, "createTime", Date.class, new Date());
         this.strictInsertFill(metaObject, "detectTime", Date.class, new Date());
-        this.strictUpdateFill(metaObject, "updateTime", Date.class, new Date());
+        this.strictInsertFill(metaObject, "updateTime", Date.class, new Date());
     }
 
     @Override

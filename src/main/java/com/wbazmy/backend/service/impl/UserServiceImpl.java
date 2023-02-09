@@ -47,10 +47,11 @@ public class UserServiceImpl implements UserService {
         if (oldUser != null) {
             return null;
         }
-        UserDto userDto = new UserDto();
-        BeanUtils.copyProperties(user, userDto);
         user.setPassword(MD5Util.encode(user.getPassword()));
         userRepository.save(user);
+        user = userRepository.findByUserName(userName);
+        UserDto userDto = new UserDto();
+        BeanUtils.copyProperties(user, userDto);
         userDto.setLogStatus(Boolean.TRUE);
         return userDto;
     }
@@ -74,8 +75,11 @@ public class UserServiceImpl implements UserService {
             return null;
         }
         user.setId(oldUser.getId());
-        user.setPassword(MD5Util.encode(user.getPassword()));
+        if (user.getPassword() != null) {
+            user.setPassword(MD5Util.encode(user.getPassword()));
+        }
         userRepository.updateByUserId(user);
+        user = userRepository.findByUserName(user.getUserName());
         UserDto userDto = new UserDto();
         BeanUtils.copyProperties(user, userDto);
         userDto.setLogStatus(Boolean.TRUE);

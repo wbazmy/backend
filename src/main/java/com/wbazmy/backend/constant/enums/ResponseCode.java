@@ -15,7 +15,9 @@ public enum ResponseCode {
     USERNOTEXIST(601, "User not Exist"), WRONGPASSWORD(602, "Password is wrong"),
     USERNAMEEXIST(603, "User name has existed"), WRONGEMAIL(604, "Email format is wrong"),
     WRONGPHONENUMBER(605, "Phong number format is wrong"), ILLEGALACCESS(606, "Illegal access"),
-    PROJECTNAMEEXIST(701, "Project name has existed"), PROJECTNAMENOTEXIST(702, "Project name not Exist");
+    PROJECTNAMEEXIST(701, "Project name has existed"), PROJECTNAMENOTEXIST(702, "Project name not Exist"),
+    HISTORYNOTEXIST(801, "History not Exist"), RULENAMEEXIST(901, "Rule name has existed"),
+    RULENOTEXIST(902, "Rule not Exist");
 
     private final Integer code;
 

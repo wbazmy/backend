@@ -3,13 +3,10 @@ package com.wbazmy.backend.dao;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.wbazmy.backend.mapper.ProjectMapper;
-import com.wbazmy.backend.mapper.UserMapper;
-import com.wbazmy.backend.model.dto.PageInfo;
 import com.wbazmy.backend.model.entity.Project;
 import org.springframework.stereotype.Repository;
 
 import javax.annotation.Resource;
-import java.util.List;
 
 /**
  * @author Zhang Yang

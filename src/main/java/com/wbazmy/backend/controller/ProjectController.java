@@ -37,6 +37,21 @@ public class ProjectController {
         return ResponseResult.success(projectService.pageProject(pageNum, pageSize));
     }
 
+    @GetMapping("/info")
+    @ResponseBody
+    public ResponseResult<ProjectDto> getProjectInfo(@RequestParam String projectName) {
+        if (StringUtils.isBlank(projectName)) {
+            log.info("项目信息获取失败，参数不完整");
+            return ResponseResult.fail(ResponseCode.MISSCONTENT.getCode(), ResponseCode.MISSCONTENT.getMsg());
+        }
+        ProjectDto projectDto = projectService.getProjectInfo(projectName);
+        if (Objects.isNull(projectDto)) {
+            log.info("项目信息获取失败，项目不存在");
+            return ResponseResult.fail(ResponseCode.PROJECTNAMENOTEXIST.getCode(), ResponseCode.PROJECTNAMENOTEXIST.getMsg());
+        }
+        return ResponseResult.success(projectDto);
+    }
+
     @PostMapping("/create")
     @ResponseBody
     public ResponseResult<ProjectDto> createProject(@RequestBody Project project) {
@@ -54,27 +69,11 @@ public class ProjectController {
         return ResponseResult.success(projectDto);
     }
 
-    @GetMapping("/info")
-    @ResponseBody
-    public ResponseResult<ProjectDto> getProjectInfo(@RequestParam String projectName) {
-        if (StringUtils.isBlank(projectName)) {
-            log.info("项目信息获取失败，参数不完整");
-            return ResponseResult.fail(ResponseCode.MISSCONTENT.getCode(), ResponseCode.MISSCONTENT.getMsg());
-        }
-        ProjectDto projectDto = projectService.getProjectInfo(projectName);
-        if (Objects.isNull(projectDto)) {
-            log.info("项目信息获取失败，项目不存在");
-            return ResponseResult.fail(ResponseCode.PROJECTNAMENOTEXIST.getCode(), ResponseCode.PROJECTNAMENOTEXIST.getMsg());
-        }
-        return ResponseResult.success(projectDto);
-    }
 
     @PostMapping("/update")
     @ResponseBody
     public ResponseResult<ProjectDto> updateProject(@RequestBody Project project) {
-        if (StringUtils.isBlank(project.getProjectName()) || StringUtils.isBlank(project.getBuildPath()) ||
-                StringUtils.isBlank(project.getPath()) || StringUtils.isBlank(project.getRepoUrl()) ||
-                Objects.isNull(project.getBuildType())) {
+        if (Objects.isNull(project.getId())) {
             log.info("项目更新失败，参数不完整");
             return ResponseResult.fail(ResponseCode.MISSCONTENT.getCode(), ResponseCode.MISSCONTENT.getMsg());
         }

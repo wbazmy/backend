@@ -3,17 +3,12 @@ package com.wbazmy.backend.service.impl;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.wbazmy.backend.dao.HistoryRepository;
 import com.wbazmy.backend.model.dto.PageInfo;
-import com.wbazmy.backend.model.dto.ProjectDto;
 import com.wbazmy.backend.model.entity.History;
-import com.wbazmy.backend.model.entity.Project;
 import com.wbazmy.backend.service.HistoryService;
-import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
 
 /**
  * @author Zhang Yang
@@ -45,8 +40,13 @@ public class HistoryServiceImpl implements HistoryService {
     }
 
     @Override
-    public void deleteHistory(Long id) {
+    public Boolean deleteHistory(Long id) {
+        History history = historyRepository.findById(id);
+        if (history==null) {
+            return Boolean.FALSE;
+        }
         historyRepository.deleteById(id);
+        return Boolean.TRUE;
     }
 
     @Override
