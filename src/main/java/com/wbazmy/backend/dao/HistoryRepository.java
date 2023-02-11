@@ -24,6 +24,12 @@ public class HistoryRepository {
         }
     }
 
+    public void updateById(History history) {
+        if (history != null) {
+            historyMapper.updateById(history);
+        }
+    }
+
     public void deleteById(Long id) {
         if (id != null) {
             historyMapper.deleteById(id);

@@ -12,3 +12,7 @@ mybatis-plus:
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
   type-enums-package: com.wbazmy.backend.constant.enums
+
+file:
+  download-path: D:\学习\实验室\研究生毕设\backend\src\main\resources\static\report\
+  python-file-path: /home/uu/check.py

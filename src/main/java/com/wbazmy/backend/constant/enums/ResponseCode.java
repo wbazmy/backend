@@ -17,7 +17,8 @@ public enum ResponseCode {
     WRONGPHONENUMBER(605, "Phong number format is wrong"), ILLEGALACCESS(606, "Illegal access"),
     PROJECTNAMEEXIST(701, "Project name has existed"), PROJECTNAMENOTEXIST(702, "Project name not Exist"),
     HISTORYNOTEXIST(801, "History not Exist"), RULENAMEEXIST(901, "Rule name has existed"),
-    RULENOTEXIST(902, "Rule not Exist");
+    RULENOTEXIST(902, "Rule not Exist"),BUILDMODEERROR(1001, "Build mode error"),
+    CHECKERROR(1002, "Check error");
 
     private final Integer code;
 

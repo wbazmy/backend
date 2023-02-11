@@ -41,7 +41,6 @@ public class ProjectServiceImpl implements ProjectService {
             return null;
         }
         projectRepository.save(project);
-        project = projectRepository.findByProjectNameAndUserId(project.getProjectName(), userId);
         ProjectDto projectDto = new ProjectDto();
         BeanUtils.copyProperties(project, projectDto);
         // todo 在此还要从github拉取项目到本地
@@ -75,7 +74,7 @@ public class ProjectServiceImpl implements ProjectService {
                 return null;
             }
         }
-        projectRepository.updateByProjectId(project);
+        projectRepository.updateById(project);
         project = projectRepository.findById(project.getId());
         ProjectDto projectDto = new ProjectDto();
         BeanUtils.copyProperties(project, projectDto);

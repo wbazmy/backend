@@ -25,7 +25,7 @@ public class ProjectRepository {
         }
     }
 
-    public void updateByProjectId(Project project) {
+    public void updateById(Project project) {
         if (project != null) {
             projectMapper.updateById(project);
         }

@@ -2,6 +2,7 @@ package com.wbazmy.backend.model.entity;
 
 import com.baomidou.mybatisplus.annotation.*;
 import com.wbazmy.backend.constant.enums.BuildModeEnum;
+import com.wbazmy.backend.constant.enums.CheckStatusEnum;
 import lombok.Data;
 
 import java.util.Date;
@@ -19,11 +20,12 @@ public class History {
     private Long projectId;
     private Integer mdNum;
     private Integer rdNum;
-    @TableField(value = "detect_time", fill = FieldFill.INSERT)
-    private Date detectTime;
+    private Date startTime;
+    private Date endTime;
     private Integer duration;
     private BuildModeEnum buildMode;
-    private String lastCommitId;
+    private CheckStatusEnum checkStatus;
+    private String baseCommitId;
     private String curCommitId;
 
 }

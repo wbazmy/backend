@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * @author Zhang Yang
@@ -35,6 +36,12 @@ public class RuleRepository {
         QueryWrapper<Rule> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("project_id", projectId);
         return ruleMapper.selectPage(page, queryWrapper);
+    }
+
+    public List<Rule> listRuleByProjectId(Long projectId) {
+        QueryWrapper<Rule> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("project_id", projectId);
+        return ruleMapper.selectList(queryWrapper);
     }
 
     public void saveRule(Rule rule) {

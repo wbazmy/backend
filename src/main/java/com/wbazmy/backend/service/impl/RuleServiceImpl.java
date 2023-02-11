@@ -29,7 +29,7 @@ public class RuleServiceImpl implements RuleService {
             return null;
         }
         ruleRepository.saveRule(rule);
-        return ruleRepository.findByRuleNameAndProjectId(rule.getRuleName(), rule.getProjectId());
+        return rule;
     }
 
     @Override
