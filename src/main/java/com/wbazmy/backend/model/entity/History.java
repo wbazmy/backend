@@ -26,6 +26,6 @@ public class History {
     private BuildModeEnum buildMode;
     private CheckStatusEnum checkStatus;
     private String baseCommitId;
-    private String curCommitId;
+    private String headCommitId;
 
 }

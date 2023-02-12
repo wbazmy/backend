@@ -1,9 +1,11 @@
 package com.wbazmy.backend.controller;
 
 import com.wbazmy.backend.constant.enums.ResponseCode;
+import com.wbazmy.backend.dao.ProjectRepository;
 import com.wbazmy.backend.model.dto.PageInfo;
 import com.wbazmy.backend.model.dto.ResponseResult;
 import com.wbazmy.backend.model.entity.History;
+import com.wbazmy.backend.model.entity.Project;
 import com.wbazmy.backend.service.HistoryService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -26,11 +28,14 @@ import java.util.Objects;
 public class HistoryController {
 
     //todo 修改文件路径
-    @Value("${file.download-path}")
+    @Value("${file.history-data-path}")
     private String downLoadPath;
 
     @Resource
     private HistoryService historyService;
+
+    @Resource
+    private ProjectRepository projectRepository;
 
     @GetMapping("/page")
     @ResponseBody
@@ -59,12 +64,14 @@ public class HistoryController {
 
     @GetMapping("/report_file")
     @ResponseBody
-    public String getReportFile(HttpServletResponse response, @RequestParam Long historyId) {
-        if (Objects.isNull(historyId)) {
+    public String getReportFile(HttpServletResponse response, @RequestParam Long projectId, @RequestParam Long historyId) {
+        if (Objects.isNull(historyId) || Objects.isNull(projectId)) {
             log.info("参数不足");
             return "参数不足";
         }
-        String fileName = "dep_error_report_" + historyId + ".txt";
+        Project project = projectRepository.findById(projectId);
+        downLoadPath = downLoadPath + project.getProjectName() + "-" + project.getUserId() + "/";
+        String fileName = "dep_error_" + historyId + ".csv";
         String filePath = downLoadPath + fileName;
         File file = new File(filePath);
         if (!file.exists()) {

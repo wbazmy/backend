@@ -1,5 +1,6 @@
 package com.wbazmy.backend.service.impl;
 
+import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.wbazmy.backend.constant.enums.CheckStatusEnum;
 import com.wbazmy.backend.constant.enums.RuleModeEnum;
 import com.wbazmy.backend.dao.HistoryRepository;
@@ -15,6 +16,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.io.*;
 import java.util.Date;
 import java.util.List;
 
@@ -29,6 +31,12 @@ public class ProcessServiceImpl implements ProcessService {
 
     @Value("${file.python-file-path}")
     private String pythonFilePath;
+
+    @Value("${file.python-path}")
+    private String pythonPath;
+
+    @Value("${history-data-path}")
+    private String historyDataPath;
 
     @Resource
     private HistoryRepository historyRepository;
@@ -59,17 +67,84 @@ public class ProcessServiceImpl implements ProcessService {
                 excludeSuffix.append(rule.getRuleContent().trim()).append(';');
             }
         }
-        String command = "python " + pythonFilePath + " --build_path=" + project.getBuildPath() +
+        String command = pythonPath + " " + pythonFilePath + " --build_path=" + project.getBuildPath() +
                 " --project_name=" + project.getProjectName() + " --exclude_target=" + excludeTarget +
                 " --exclude_path=" + excludePath + " --exclude_suffix=" + excludeSuffix +
-                " --base_commit_id=" + history.getBaseCommitId() + " --cur_commit_id=" +
-                history.getCurCommitId() + " --build_mode=" + history.getBuildMode();
+                " --build_mode=" + history.getBuildMode() + " --history_id=" + history.getId();
+        if (StringUtils.isNotBlank(history.getBaseCommitId())) {
+            command += " --base_commit_id=" + history.getBaseCommitId();
+        }
+        if (StringUtils.isNotBlank(history.getHeadCommitId())) {
+            command += " --head_commit_id=" + history.getHeadCommitId();
+        }
         log.info("command:{}", command);
-        Thread.sleep(3000);
-        project.setLastCommitId(history.getCurCommitId());
+
+        try {
+            Process process = Runtime.getRuntime().exec(command);
+            InputStream is1 = process.getInputStream();
+            InputStream is2 = process.getErrorStream();
+            // 启动两个线程，一个线程负责读标准输出流，另一个负责读标准错误流
+            new Thread(() -> {
+                BufferedReader br1 = new BufferedReader(new InputStreamReader(is1));
+                try {
+                    while (br1.readLine() != null) {
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } finally {
+                    try {
+                        is1.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }).start();
+
+            new Thread(() -> {
+                BufferedReader br2 = new BufferedReader(new InputStreamReader(is2));
+                try {
+                    while (br2.readLine() != null) {
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } finally {
+                    try {
+                        is2.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }).start();
+
+            int re = process.waitFor();
+            if (re == 1) {
+                log.info("调用python脚本失败");
+                history.setCheckStatus(CheckStatusEnum.FAILED);
+                history.setEndTime(new Date());
+                history.setDuration((int) ((history.getEndTime().getTime() - history.getStartTime().getTime()) / 1000));
+                historyRepository.updateById(history);
+                return;
+            } else {
+                log.info("调用成功");
+            }
+        } catch (IOException e) {
+            log.error(e.getMessage(), e);
+        }
+
+        Integer mdNum = null;
+        Integer rdNum = null;
+        try {
+            BufferedReader reader = new BufferedReader(new FileReader(historyDataPath + project.getProjectName() +
+                    "-" + project.getUserId() + "/check_num.txt"));
+            mdNum = Integer.valueOf(reader.readLine().trim());
+            rdNum = Integer.valueOf(reader.readLine().trim());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        project.setLastCommitId(history.getHeadCommitId());
         projectRepository.updateById(project);
-        history.setMdNum(0); // 待修改
-        history.setRdNum(0); // 待修改
+        history.setMdNum(mdNum);
+        history.setRdNum(rdNum);
         history.setCheckStatus(CheckStatusEnum.FINISHED);
         history.setEndTime(new Date());
         history.setDuration((int) ((history.getEndTime().getTime() - history.getStartTime().getTime()) / 1000));

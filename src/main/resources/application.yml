@@ -1,7 +1,7 @@
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/backend?serverTimezone=GMT%2B8&characterEncoding=utf-8&useSSL=false
+    url: jdbc:mysql://192.168.81.1:3306/backend?serverTimezone=GMT%2B8&characterEncoding=utf-8&useSSL=false
     username: root
     password: 123456
   jackson:
@@ -14,5 +14,6 @@ mybatis-plus:
   type-enums-package: com.wbazmy.backend.constant.enums
 
 file:
-  download-path: D:\学习\实验室\研究生毕设\backend\src\main\resources\static\report\
-  python-file-path: /home/uu/check.py
+  python-path: /bin/python3
+  python-file-path: /home/uu/WorkSpace/code/main.py
+  history-data-path: /home/uu/WorkSpace/history-data/
