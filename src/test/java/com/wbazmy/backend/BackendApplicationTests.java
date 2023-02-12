@@ -21,12 +21,5 @@ class BackendApplicationTests {
     void contextLoads() {
     }
 
-    @Test
-    void test() throws IOException {
-        Process process = Runtime.getRuntime().exec("git -C " + "D:\\学习\\实验室\\研究生毕设\\backend" + " rev-parse " + "master2");
-        String commitId = new BufferedReader(new InputStreamReader(process.getInputStream())).readLine();
-        System.out.println(commitId);
-
-    }
 
 }

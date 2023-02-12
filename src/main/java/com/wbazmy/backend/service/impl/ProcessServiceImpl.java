@@ -35,7 +35,7 @@ public class ProcessServiceImpl implements ProcessService {
     @Value("${file.python-path}")
     private String pythonPath;
 
-    @Value("${history-data-path}")
+    @Value("${file.history-data-path}")
     private String historyDataPath;
 
     @Resource
@@ -119,16 +119,15 @@ public class ProcessServiceImpl implements ProcessService {
             int re = process.waitFor();
             if (re == 1) {
                 log.info("调用python脚本失败");
-                history.setCheckStatus(CheckStatusEnum.FAILED);
-                history.setEndTime(new Date());
-                history.setDuration((int) ((history.getEndTime().getTime() - history.getStartTime().getTime()) / 1000));
-                historyRepository.updateById(history);
+                failHandle(history);
                 return;
             } else {
                 log.info("调用成功");
             }
         } catch (IOException e) {
+            failHandle(history);
             log.error(e.getMessage(), e);
+            return;
         }
 
         Integer mdNum = null;
@@ -139,13 +138,22 @@ public class ProcessServiceImpl implements ProcessService {
             mdNum = Integer.valueOf(reader.readLine().trim());
             rdNum = Integer.valueOf(reader.readLine().trim());
         } catch (IOException e) {
-            e.printStackTrace();
+            failHandle(history);
+            log.error(e.getMessage(), e);
+            return;
         }
         project.setLastCommitId(history.getHeadCommitId());
         projectRepository.updateById(project);
         history.setMdNum(mdNum);
         history.setRdNum(rdNum);
         history.setCheckStatus(CheckStatusEnum.FINISHED);
+        history.setEndTime(new Date());
+        history.setDuration((int) ((history.getEndTime().getTime() - history.getStartTime().getTime()) / 1000));
+        historyRepository.updateById(history);
+    }
+
+    private void failHandle(History history) {
+        history.setCheckStatus(CheckStatusEnum.FAILED);
         history.setEndTime(new Date());
         history.setDuration((int) ((history.getEndTime().getTime() - history.getStartTime().getTime()) / 1000));
         historyRepository.updateById(history);
