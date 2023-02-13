@@ -44,9 +44,9 @@ public class CheckServiceImpl implements CheckService {
         history.setProjectId(request.getProjectId());
         history.setBuildMode(request.getBuildMode());
         history.setStartTime(new Date());
-        String headCommitId = "";
+        String headCommitId;
         try {
-            headCommitId = getCommitId(request.getCommitId(), request.getBranch(), project.getPath());
+            headCommitId = getCommitId(request.getCommitId(), request.getBranch(), project.getPath(), project);
         } catch (IOException | InterruptedException e) {
             log.error(e.getMessage(), e);
             return null;
@@ -75,8 +75,11 @@ public class CheckServiceImpl implements CheckService {
         return history;
     }
 
-    private String getCommitId(String commitId, String branch, String projectPath) throws IOException, InterruptedException {
+    private String getCommitId(String commitId, String branch, String projectPath, Project project) throws IOException, InterruptedException {
         if (StringUtils.isBlank(commitId)) {
+            if (StringUtils.isBlank(branch)) {
+                branch = project.getMainBranch();
+            }
             Process process = Runtime.getRuntime().exec("git -C " + projectPath + " rev-parse " + branch);
             process.waitFor();
             commitId = new BufferedReader(new InputStreamReader(process.getInputStream())).readLine();

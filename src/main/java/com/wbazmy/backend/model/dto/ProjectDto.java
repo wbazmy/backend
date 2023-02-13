@@ -23,6 +23,7 @@ public class ProjectDto {
     private String repoUrl;
     private String path;
     private String buildPath;
+    private String mainBranch;
     private BuildTypeEnum buildType;
     private String description;
     private String lastCommitId;

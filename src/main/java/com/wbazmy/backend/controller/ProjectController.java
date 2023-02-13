@@ -57,7 +57,7 @@ public class ProjectController {
     public ResponseResult<ProjectDto> createProject(@RequestBody Project project) {
         if (StringUtils.isBlank(project.getProjectName()) || StringUtils.isBlank(project.getBuildPath()) ||
                 StringUtils.isBlank(project.getPath()) || StringUtils.isBlank(project.getRepoUrl()) ||
-                Objects.isNull(project.getBuildType())) {
+                StringUtils.isBlank(project.getMainBranch()) || Objects.isNull(project.getBuildType())) {
             log.info("项目创建失败，参数不完整");
             return ResponseResult.fail(ResponseCode.MISSCONTENT.getCode(), ResponseCode.MISSCONTENT.getMsg());
         }

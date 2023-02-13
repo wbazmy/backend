@@ -17,6 +17,7 @@ public class Project extends PublicField{
     private Long userId;
     private String path;
     private String buildPath;
+    private String mainBranch;
     private BuildTypeEnum buildType;
     private String description;
     private String lastCommitId;

@@ -50,7 +50,7 @@ public class ProcessServiceImpl implements ProcessService {
     @Override
     @Async
     public void callCheck(History history, Project project) throws InterruptedException {
-        //todo 获取规则信息，然后调用python程序并更新历史记录信息，最后还要更新项目的lastcommitid
+        // 获取规则信息，然后调用python程序并更新历史记录信息，最后还要更新项目的lastcommitid
         List<Rule> rules = ruleRepository.listRuleByProjectId(history.getProjectId());
         // 规则解析
         StringBuilder excludeTarget = new StringBuilder();
@@ -70,7 +70,8 @@ public class ProcessServiceImpl implements ProcessService {
         String command = pythonPath + " " + pythonFilePath + " --build_path=" + project.getBuildPath() +
                 " --project_name=" + project.getProjectName() + " --exclude_target=" + excludeTarget +
                 " --exclude_path=" + excludePath + " --exclude_suffix=" + excludeSuffix +
-                " --build_mode=" + history.getBuildMode() + " --history_id=" + history.getId();
+                " --build_mode=" + history.getBuildMode() + " --history_id=" + history.getId() +
+                " --user_id=" + project.getUserId();
         if (StringUtils.isNotBlank(history.getBaseCommitId())) {
             command += " --base_commit_id=" + history.getBaseCommitId();
         }
@@ -130,13 +131,14 @@ public class ProcessServiceImpl implements ProcessService {
             return;
         }
 
-        Integer mdNum = null;
-        Integer rdNum = null;
+        Integer mdNum;
+        Integer rdNum;
         try {
             BufferedReader reader = new BufferedReader(new FileReader(historyDataPath + project.getProjectName() +
                     "-" + project.getUserId() + "/check_num.txt"));
             mdNum = Integer.valueOf(reader.readLine().trim());
             rdNum = Integer.valueOf(reader.readLine().trim());
+            log.info("mdNum:{}, rdNum:{}", mdNum, rdNum);
         } catch (IOException e) {
             failHandle(history);
             log.error(e.getMessage(), e);

@@ -41,6 +41,7 @@ public class CheckController {
         }
         History history = checkService.depErrorCheck(request);
         if(Objects.isNull(history)) {
+            log.info("检测失败");
             return ResponseResult.fail(ResponseCode.CHECKERROR.getCode(), ResponseCode.CHECKERROR.getMsg());
         }
         if (history.getCheckStatus().equals(CheckStatusEnum.FAILED)) {

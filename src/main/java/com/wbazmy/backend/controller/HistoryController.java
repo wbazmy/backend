@@ -27,7 +27,6 @@ import java.util.Objects;
 @Slf4j
 public class HistoryController {
 
-    //todo 修改文件路径
     @Value("${file.history-data-path}")
     private String downLoadPath;
 
