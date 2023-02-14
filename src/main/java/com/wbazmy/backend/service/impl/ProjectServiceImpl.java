@@ -1,5 +1,6 @@
 package com.wbazmy.backend.service.impl;
 
+import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.wbazmy.backend.dao.ProjectRepository;
 import com.wbazmy.backend.dao.UserRepository;
@@ -9,6 +10,7 @@ import com.wbazmy.backend.model.entity.Project;
 import com.wbazmy.backend.service.ProjectService;
 import com.wbazmy.backend.utils.UserContextUtil;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -24,6 +26,9 @@ import java.util.stream.Collectors;
 @Service
 public class ProjectServiceImpl implements ProjectService {
 
+    @Value("${file.project-path}")
+    private String projectPath;
+
     @Resource
     private ProjectRepository projectRepository;
 
@@ -36,6 +41,8 @@ public class ProjectServiceImpl implements ProjectService {
         String userName = UserContextUtil.getCurrentUserName();
         Long userId = userRepository.findByUserName(userName).getId();
         project.setUserId(userId);
+        project.setPath(projectPath + project.getProjectName());
+        project.setBuildPath(projectPath + project.getProjectName() + "/" + project.getBuildPath());
         Project oldProject = projectRepository.findByProjectNameAndUserId(project.getProjectName(), userId);
         if (oldProject != null) {
             return null;
@@ -73,6 +80,9 @@ public class ProjectServiceImpl implements ProjectService {
             if (oldProject1 != null) {
                 return null;
             }
+        }
+        if (StringUtils.isNotBlank(project.getBuildPath())) {
+            project.setBuildPath(projectPath + project.getProjectName() + "/" + project.getBuildPath());
         }
         projectRepository.updateById(project);
         project = projectRepository.findById(project.getId());
