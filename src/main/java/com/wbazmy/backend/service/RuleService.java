@@ -18,5 +18,5 @@ public interface RuleService {
 
     Rule getRule(Long ruleId);
 
-    PageInfo<Rule> pageRule(Long projectId, Integer pageNum, Integer pageSize);
+    PageInfo<Rule> pageRule(String ruleName, Long projectId, Integer pageNum, Integer pageSize);
 }

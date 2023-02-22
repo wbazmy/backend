@@ -60,10 +60,11 @@ public class ProjectRepository {
         projectMapper.deleteById(id);
     }
 
-    public Page<Project> pageProject(Integer pageNum, Integer pageSize, Long userId) {
+    public Page<Project> pageProject(Integer pageNum, Integer pageSize, Long userId, String projectName) {
         Page<Project> page = new Page<>(pageNum, pageSize);
         QueryWrapper<Project> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("user_id", userId);
+        queryWrapper.like("project_name", projectName);
         projectMapper.selectPage(page, queryWrapper);
         return page;
     }

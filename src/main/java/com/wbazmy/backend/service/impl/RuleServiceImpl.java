@@ -64,8 +64,8 @@ public class RuleServiceImpl implements RuleService {
     }
 
     @Override
-    public PageInfo<Rule> pageRule(Long projectId, Integer pageNum, Integer pageSize) {
-        Page<Rule> rulePage = ruleRepository.pageRule(pageNum, pageSize, projectId);
+    public PageInfo<Rule> pageRule(String ruleName, Long projectId, Integer pageNum, Integer pageSize) {
+        Page<Rule> rulePage = ruleRepository.pageRule(pageNum, pageSize, projectId, ruleName);
         List<Rule> records = rulePage.getRecords();
         PageInfo<Rule> pageInfo = new PageInfo<>();
         pageInfo.setCurrentPage(pageNum);

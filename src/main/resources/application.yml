@@ -1,12 +1,15 @@
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://192.168.81.1:3306/backend?serverTimezone=GMT%2B8&characterEncoding=utf-8&useSSL=false
+    url: jdbc:mysql://192.168.92.1:3306/backend?serverTimezone=GMT%2B8&characterEncoding=utf-8&useSSL=false
     username: root
     password: 123456
   jackson:
     date-format: yyyy-MM-dd HH:mm:ss
     time-zone: GMT+8
+
+server:
+  port: 8088
 
 mybatis-plus:
   configuration:
@@ -18,3 +21,4 @@ file:
   python-file-path: /home/uu/WorkSpace/code/main.py
   history-data-path: /home/uu/WorkSpace/history-data/
   project-path: /home/uu/WorkSpace/expproject/
+  upload-path: D:\学习\实验室\研究生毕设

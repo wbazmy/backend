@@ -31,10 +31,11 @@ public class RuleRepository {
         return ruleMapper.selectById(ruleId);
     }
 
-    public Page<Rule> pageRule(Integer pageNum, Integer pageSize, Long projectId) {
+    public Page<Rule> pageRule(Integer pageNum, Integer pageSize, Long projectId, String ruleName) {
         Page<Rule> page = new Page<>(pageNum, pageSize);
         QueryWrapper<Rule> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("project_id", projectId);
+        queryWrapper.like("rule_name", ruleName);
         return ruleMapper.selectPage(page, queryWrapper);
     }
 

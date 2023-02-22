@@ -67,6 +67,7 @@ public class ProcessServiceImpl implements ProcessService {
                 excludeSuffix.append(rule.getRuleContent().trim()).append(';');
             }
         }
+        // todo 修改buildpath
         String command = pythonPath + " " + pythonFilePath + " --build_path=" + project.getBuildPath() +
                 " --project_name=" + project.getProjectName() + " --exclude_target=" + excludeTarget +
                 " --exclude_path=" + excludePath + " --exclude_suffix=" + excludeSuffix +

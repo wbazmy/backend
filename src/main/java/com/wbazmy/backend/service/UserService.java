@@ -1,5 +1,6 @@
 package com.wbazmy.backend.service;
 
+import com.wbazmy.backend.model.dto.PageInfo;
 import com.wbazmy.backend.model.dto.UserDto;
 import com.wbazmy.backend.model.entity.User;
 
@@ -17,4 +18,8 @@ public interface UserService {
     UserDto userInfo(String userName);
 
     UserDto userUpdate(User user);
+
+    void userDelete(Long userId);
+
+    PageInfo<UserDto> pageUser(String userName, Integer pageNum, Integer pageSize);
 }

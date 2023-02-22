@@ -4,7 +4,10 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author Zhang Yang
@@ -23,5 +26,6 @@ public class UserDto {
     private Date createTime;
     private Date updateTime;
     private Boolean logStatus = Boolean.FALSE;
-    private String jwtToken;
+    private String token;
+    private List<String> roles= Collections.singletonList("admin");
 }

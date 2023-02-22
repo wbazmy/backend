@@ -23,7 +23,7 @@ public class LoginInterceptor implements HandlerInterceptor {
         }
 
         // 从请求头中获取token字符串并解析
-        Claims claims = JwtUtil.parse(request.getHeader("Authorization"));
+        Claims claims = JwtUtil.parse(request.getHeader("X-Token"));
         // 已登录就直接放行
         if (claims != null) {
             UserContextUtil.add(claims.getSubject());

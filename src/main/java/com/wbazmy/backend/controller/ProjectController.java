@@ -8,10 +8,14 @@ import com.wbazmy.backend.model.dto.ResponseResult;
 import com.wbazmy.backend.model.entity.Project;
 import com.wbazmy.backend.service.ProjectService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
+import java.io.File;
+import java.io.IOException;
 import java.util.Objects;
 
 /**
@@ -24,17 +28,21 @@ import java.util.Objects;
 @Slf4j
 public class ProjectController {
 
+    //todo 待修改
+    @Value("${file.upload-path}")
+    private String uploadFilePath;
+
     @Resource
     private ProjectService projectService;
 
     @GetMapping("/page")
     @ResponseBody
-    public ResponseResult<PageInfo<ProjectDto>> pageProject(@RequestParam Integer pageNum, @RequestParam Integer pageSize) {
+    public ResponseResult<PageInfo<ProjectDto>> pageProject(@RequestParam String projectName, @RequestParam Integer pageNum, @RequestParam Integer pageSize) {
         if (Objects.isNull(pageNum) || Objects.isNull(pageSize)) {
             log.info("项目分页查询失败，参数不完整");
             return ResponseResult.fail(ResponseCode.MISSCONTENT.getCode(), ResponseCode.MISSCONTENT.getMsg());
         }
-        return ResponseResult.success(projectService.pageProject(pageNum, pageSize));
+        return ResponseResult.success(projectService.pageProject(projectName, pageNum, pageSize));
     }
 
     @GetMapping("/info")
@@ -55,9 +63,8 @@ public class ProjectController {
     @PostMapping("/create")
     @ResponseBody
     public ResponseResult<ProjectDto> createProject(@RequestBody Project project) {
-        if (StringUtils.isBlank(project.getProjectName()) || StringUtils.isBlank(project.getBuildPath()) ||
-                StringUtils.isBlank(project.getRepoUrl()) || StringUtils.isBlank(project.getMainBranch()) ||
-                Objects.isNull(project.getBuildType())) {
+        if (StringUtils.isBlank(project.getProjectName()) || StringUtils.isBlank(project.getRepoUrl())
+                || StringUtils.isBlank(project.getMainBranch()) || Objects.isNull(project.getBuildType())) {
             log.info("项目创建失败，参数不完整");
             return ResponseResult.fail(ResponseCode.MISSCONTENT.getCode(), ResponseCode.MISSCONTENT.getMsg());
         }
@@ -97,6 +104,25 @@ public class ProjectController {
             log.info("项目删除失败，项目不存在");
             return ResponseResult.fail(ResponseCode.PROJECTNAMENOTEXIST.getCode(), ResponseCode.PROJECTNAMENOTEXIST.getMsg());
         }
+        return ResponseResult.success();
+    }
+
+    @PostMapping("/upload")
+    @ResponseBody
+    public ResponseResult httpUpload(@RequestParam("scriptFile") MultipartFile[] files, @RequestParam String projectName) {
+        for (MultipartFile file : files) {
+            String fileName = file.getOriginalFilename();  // 文件名
+            File dest = new File(uploadFilePath + "\\" + fileName);
+            if (!dest.getParentFile().exists()) {
+                dest.getParentFile().mkdirs();
+            }
+            try {
+                file.transferTo(dest);
+            } catch (IOException e) {
+                log.error(e.getMessage(), e);
+            }
+        }
+        log.info("{}文件上传成功", projectName);
         return ResponseResult.success();
     }
 }

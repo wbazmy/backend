@@ -1,7 +1,11 @@
 package com.wbazmy.backend.service.impl;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.wbazmy.backend.dao.UserRepository;
+import com.wbazmy.backend.model.dto.PageInfo;
+import com.wbazmy.backend.model.dto.ProjectDto;
 import com.wbazmy.backend.model.dto.UserDto;
+import com.wbazmy.backend.model.entity.Project;
 import com.wbazmy.backend.model.entity.User;
 import com.wbazmy.backend.service.UserService;
 import com.wbazmy.backend.utils.MD5Util;
@@ -9,7 +13,9 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * @author Zhang Yang
@@ -84,5 +90,28 @@ public class UserServiceImpl implements UserService {
         BeanUtils.copyProperties(user, userDto);
         userDto.setLogStatus(Boolean.TRUE);
         return userDto;
+    }
+
+    @Override
+    public void userDelete(Long userId) {
+        userRepository.deleteByUserId(userId);
+    }
+
+    @Override
+    public PageInfo<UserDto> pageUser(String userName, Integer pageNum, Integer pageSize) {
+        Page<User> userPage = userRepository.pageUser(userName, pageNum, pageSize);
+        List<User> records = userPage.getRecords();
+        List<UserDto> userDtos = records.stream().map(user -> {
+            UserDto userDto = new UserDto();
+            BeanUtils.copyProperties(user, userDto);
+            return userDto;
+        }).collect(Collectors.toList());
+        PageInfo<UserDto> pageInfo = new PageInfo<>();
+        pageInfo.setCurrentPage(pageNum);
+        pageInfo.setPageSize(userDtos.size());
+        pageInfo.setPageTotalNum((int) userPage.getPages());
+        pageInfo.setRecordTotalNum((int) userPage.getTotal());
+        pageInfo.setData(userDtos);
+        return pageInfo;
     }
 }

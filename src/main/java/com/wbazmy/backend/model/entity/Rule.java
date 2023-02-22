@@ -16,6 +16,7 @@ public class Rule extends PublicField {
     private RuleModeEnum ruleMode;
     private Long projectId;
     private String ruleContent;
+    private Integer status;
     private String description;
 
 }

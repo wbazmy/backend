@@ -27,12 +27,12 @@ public class RuleController {
 
     @GetMapping("/page")
     @ResponseBody
-    public ResponseResult<PageInfo<Rule>> pageRule(@RequestParam Long projectId, @RequestParam Integer pageNum, @RequestParam Integer pageSize) {
+    public ResponseResult<PageInfo<Rule>> pageRule(@RequestParam String ruleName, @RequestParam Long projectId, @RequestParam Integer pageNum, @RequestParam Integer pageSize) {
         if (Objects.isNull(projectId) || Objects.isNull(pageNum) || Objects.isNull(pageSize)) {
             log.info("规则分页查询失败，参数不完整");
             return ResponseResult.fail(ResponseCode.MISSCONTENT.getCode(), ResponseCode.MISSCONTENT.getMsg());
         }
-        return ResponseResult.success(ruleService.pageRule(projectId, pageNum, pageSize));
+        return ResponseResult.success(ruleService.pageRule(ruleName, projectId, pageNum, pageSize));
     }
 
     @GetMapping("/info")

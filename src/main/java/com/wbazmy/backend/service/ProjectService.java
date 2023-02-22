@@ -20,5 +20,5 @@ public interface ProjectService {
 
     Boolean deleteProject(String projectName);
 
-    PageInfo<ProjectDto> pageProject(Integer pageNum, Integer pageSize);
+    PageInfo<ProjectDto> pageProject(String projectName, Integer pageNum, Integer pageSize);
 }

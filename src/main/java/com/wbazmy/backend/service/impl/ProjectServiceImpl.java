@@ -42,7 +42,6 @@ public class ProjectServiceImpl implements ProjectService {
         Long userId = userRepository.findByUserName(userName).getId();
         project.setUserId(userId);
         project.setPath(projectPath + project.getProjectName());
-        project.setBuildPath(projectPath + project.getProjectName() + "/" + project.getBuildPath());
         Project oldProject = projectRepository.findByProjectNameAndUserId(project.getProjectName(), userId);
         if (oldProject != null) {
             return null;
@@ -81,9 +80,6 @@ public class ProjectServiceImpl implements ProjectService {
                 return null;
             }
         }
-        if (StringUtils.isNotBlank(project.getBuildPath())) {
-            project.setBuildPath(projectPath + project.getProjectName() + "/" + project.getBuildPath());
-        }
         projectRepository.updateById(project);
         project = projectRepository.findById(project.getId());
         ProjectDto projectDto = new ProjectDto();
@@ -104,10 +100,10 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public PageInfo<ProjectDto> pageProject(Integer pageNum, Integer pageSize) {
+    public PageInfo<ProjectDto> pageProject(String projectName, Integer pageNum, Integer pageSize) {
         String userName = UserContextUtil.getCurrentUserName();
         Long userId = userRepository.findByUserName(userName).getId();
-        Page<Project> projectPage = projectRepository.pageProject(pageNum, pageSize, userId);
+        Page<Project> projectPage = projectRepository.pageProject(pageNum, pageSize, userId, projectName);
         List<Project> records = projectPage.getRecords();
         List<ProjectDto> projectDtos = records.stream().map(project -> {
             ProjectDto projectDto = new ProjectDto();
