@@ -10,4 +10,6 @@ import com.wbazmy.backend.model.entity.Project;
  */
 public interface ProcessService {
     void callCheck(History history, Project project) throws InterruptedException;
+
+    void cloneRepo(String repoUrl);
 }

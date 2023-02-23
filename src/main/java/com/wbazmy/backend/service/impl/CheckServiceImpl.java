@@ -80,6 +80,7 @@ public class CheckServiceImpl implements CheckService {
             if (StringUtils.isBlank(branch)) {
                 branch = project.getMainBranch();
             }
+            // 获取分支对应的commit_id
             Process process = Runtime.getRuntime().exec("git -C " + projectPath + " rev-parse " + branch);
             process.waitFor();
             commitId = new BufferedReader(new InputStreamReader(process.getInputStream())).readLine();

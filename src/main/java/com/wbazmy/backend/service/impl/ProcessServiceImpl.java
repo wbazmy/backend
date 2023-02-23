@@ -38,6 +38,12 @@ public class ProcessServiceImpl implements ProcessService {
     @Value("${file.history-data-path}")
     private String historyDataPath;
 
+    @Value("${file.project-path}")
+    private String projectPath;
+
+    @Value("${git.mirror-url}")
+    private String mirrorUrl;
+
     @Resource
     private HistoryRepository historyRepository;
 
@@ -68,7 +74,11 @@ public class ProcessServiceImpl implements ProcessService {
             }
         }
         // todo 修改buildpath
-        String command = pythonPath + " " + pythonFilePath + " --build_path=" + project.getBuildPath() +
+        String buildpath = projectPath + "/" + project.getProjectName();
+        if (StringUtils.isNotBlank(project.getBuildPath())) {
+            buildpath = buildpath + "/" + project.getBuildPath();
+        }
+        String command = pythonPath + " " + pythonFilePath + " --build_path=" + buildpath +
                 " --project_name=" + project.getProjectName() + " --exclude_target=" + excludeTarget +
                 " --exclude_path=" + excludePath + " --exclude_suffix=" + excludeSuffix +
                 " --build_mode=" + history.getBuildMode() + " --history_id=" + history.getId() +
@@ -154,6 +164,34 @@ public class ProcessServiceImpl implements ProcessService {
         history.setDuration((int) ((history.getEndTime().getTime() - history.getStartTime().getTime()) / 1000));
         historyRepository.updateById(history);
     }
+
+    @Override
+    @Async
+    public void cloneRepo(String repoUrl) {
+        int lastSlashIndex = repoUrl.lastIndexOf("/"); // 查找最后一个斜杠的位置
+        String repoName = repoUrl.substring(lastSlashIndex + 1); // 从该位置开始提取字符串
+        if (!repoUrl.endsWith(".git")) {
+            repoUrl += ".git";
+        }
+        repoUrl = repoUrl.replace("github.com", mirrorUrl);
+        String[] cmd = {"git", "clone", repoUrl, projectPath + repoName};
+        try {
+            Process process = Runtime.getRuntime().exec(cmd);
+            InputStream inputStream = process.getInputStream();
+            BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+            while ((reader.readLine()) != null) {
+            }
+            int exitCode = process.waitFor();
+            if (exitCode == 0) {
+                log.info("Git clone completed successfully.");
+            } else {
+                log.error("Git clone failed with exit code " + exitCode + ".");
+            }
+        } catch (IOException | InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
 
     private void failHandle(History history) {
         history.setCheckStatus(CheckStatusEnum.FAILED);

@@ -1,12 +1,12 @@
 package com.wbazmy.backend.service.impl;
 
-import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.wbazmy.backend.dao.ProjectRepository;
 import com.wbazmy.backend.dao.UserRepository;
 import com.wbazmy.backend.model.dto.PageInfo;
 import com.wbazmy.backend.model.dto.ProjectDto;
 import com.wbazmy.backend.model.entity.Project;
+import com.wbazmy.backend.service.ProcessService;
 import com.wbazmy.backend.service.ProjectService;
 import com.wbazmy.backend.utils.UserContextUtil;
 import org.springframework.beans.BeanUtils;
@@ -35,6 +35,9 @@ public class ProjectServiceImpl implements ProjectService {
     @Resource
     private UserRepository userRepository;
 
+    @Resource
+    private ProcessService processService;
+
 
     @Override
     public ProjectDto createProject(Project project) {
@@ -49,7 +52,8 @@ public class ProjectServiceImpl implements ProjectService {
         projectRepository.save(project);
         ProjectDto projectDto = new ProjectDto();
         BeanUtils.copyProperties(project, projectDto);
-        // todo 在此还要从github拉取项目到本地
+        // 将项目拉取到本地
+        processService.cloneRepo(project.getRepoUrl());
         return projectDto;
     }
 

@@ -112,7 +112,7 @@ public class ProjectController {
     public ResponseResult httpUpload(@RequestParam("scriptFile") MultipartFile[] files, @RequestParam String projectName) {
         for (MultipartFile file : files) {
             String fileName = file.getOriginalFilename();  // 文件名
-            File dest = new File(uploadFilePath + "\\" + fileName);
+            File dest = new File(uploadFilePath + projectName + "/" + fileName);
             if (!dest.getParentFile().exists()) {
                 dest.getParentFile().mkdirs();
             }

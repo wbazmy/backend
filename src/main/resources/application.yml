@@ -21,4 +21,7 @@ file:
   python-file-path: /home/uu/WorkSpace/code/main.py
   history-data-path: /home/uu/WorkSpace/history-data/
   project-path: /home/uu/WorkSpace/expproject/
-  upload-path: D:\学习\实验室\研究生毕设
+  upload-path: /home/uu/WorkSpace/expproject/
+
+git:
+  mirror-url: hub.yzuu.cf

@@ -6,9 +6,7 @@ import com.wbazmy.backend.model.dto.ResponseResult;
 import com.wbazmy.backend.model.entity.History;
 import com.wbazmy.backend.model.request.CheckRequest;
 import com.wbazmy.backend.service.CheckService;
-import com.wbazmy.backend.service.HistoryService;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.ibatis.ognl.OgnlRuntime;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -16,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
-import javax.annotation.Resources;
 import java.util.Objects;
 
 /**
