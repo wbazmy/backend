@@ -12,4 +12,6 @@ public interface ProcessService {
     void callCheck(History history, Project project) throws InterruptedException;
 
     void cloneRepo(String repoUrl);
+
+    void createDir(Project project);
 }

@@ -18,7 +18,8 @@ import java.io.PrintWriter;
 public class LoginInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        if ("/user/login".equals(request.getRequestURI()) || "/user/signup".equals(request.getRequestURI())) {
+        if ("/user/login".equals(request.getRequestURI()) || "/user/signup".equals(request.getRequestURI())
+                || "/history/report_file".equals(request.getRequestURI())) {
             return true;
         }
 

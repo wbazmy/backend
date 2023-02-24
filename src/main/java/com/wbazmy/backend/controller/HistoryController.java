@@ -38,12 +38,12 @@ public class HistoryController {
 
     @GetMapping("/page")
     @ResponseBody
-    public ResponseResult<PageInfo<History>> pageHistory(@RequestParam Long projectId, @RequestParam Integer pageNum, @RequestParam Integer pageSize) {
-        if (Objects.isNull(projectId) || Objects.isNull(pageNum) || Objects.isNull(pageSize)) {
+    public ResponseResult<PageInfo<History>> pageHistory(@RequestParam String projectName, @RequestParam Integer pageNum, @RequestParam Integer pageSize) {
+        if (Objects.isNull(projectName) || Objects.isNull(pageNum) || Objects.isNull(pageSize)) {
             log.info("参数不足");
             return ResponseResult.fail(ResponseCode.MISSCONTENT.getCode(), ResponseCode.MISSCONTENT.getMsg());
         }
-        return ResponseResult.success(historyService.pageHistory(projectId, pageNum, pageSize));
+        return ResponseResult.success(historyService.pageHistory(projectName, pageNum, pageSize));
     }
 
     @GetMapping("/info")
@@ -68,13 +68,15 @@ public class HistoryController {
             log.info("参数不足");
             return "参数不足";
         }
+
         Project project = projectRepository.findById(projectId);
         downLoadPath = downLoadPath + project.getProjectName() + "-" + project.getUserId() + "/";
         String fileName = "dep_error_" + historyId + ".csv";
         String filePath = downLoadPath + fileName;
+//        String filePath = "C:\\Users\\23954\\Desktop\\1.csv";
         File file = new File(filePath);
         if (!file.exists()) {
-            log.info("文件不存在");
+            log.info("{}文件不存在", filePath);
             return "文件不存在";
         }
 

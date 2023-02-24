@@ -22,6 +22,7 @@ file:
   history-data-path: /home/uu/WorkSpace/history-data/
   project-path: /home/uu/WorkSpace/expproject/
   upload-path: /home/uu/WorkSpace/expproject/
+  check-data-path: /home/uu/WorkSpace/tmp/
 
 git:
   mirror-url: hub.yzuu.cf

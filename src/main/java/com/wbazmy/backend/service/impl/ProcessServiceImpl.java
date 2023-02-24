@@ -44,6 +44,9 @@ public class ProcessServiceImpl implements ProcessService {
     @Value("${git.mirror-url}")
     private String mirrorUrl;
 
+    @Value("${file.check-data-path}")
+    private String checkDataPath;
+
     @Resource
     private HistoryRepository historyRepository;
 
@@ -74,7 +77,7 @@ public class ProcessServiceImpl implements ProcessService {
             }
         }
         // todo 修改buildpath
-        String buildpath = projectPath + "/" + project.getProjectName();
+        String buildpath = projectPath + project.getProjectName();
         if (StringUtils.isNotBlank(project.getBuildPath())) {
             buildpath = buildpath + "/" + project.getBuildPath();
         }
@@ -189,6 +192,20 @@ public class ProcessServiceImpl implements ProcessService {
             }
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void createDir(Project project) {
+        String dirName = checkDataPath + project.getProjectName();
+        File directory = new File(dirName);
+        if (!directory.exists()) {
+            directory.mkdir();
+        }
+        dirName = historyDataPath + project.getProjectName() + "-" + project.getUserId();
+        directory = new File(dirName);
+        if (!directory.exists()) {
+            directory.mkdir();
         }
     }
 

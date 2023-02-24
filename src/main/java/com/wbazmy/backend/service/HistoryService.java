@@ -11,7 +11,7 @@ import com.wbazmy.backend.model.entity.History;
 public interface HistoryService {
     void saveHistory(History history);
 
-    PageInfo<History> pageHistory(Long projectId, Integer pageNum, Integer pageSize);
+    PageInfo<History> pageHistory(String projectName, Integer pageNum, Integer pageSize);
 
     Boolean deleteHistory(Long id);
 

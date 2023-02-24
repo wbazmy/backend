@@ -52,8 +52,9 @@ public class ProjectServiceImpl implements ProjectService {
         projectRepository.save(project);
         ProjectDto projectDto = new ProjectDto();
         BeanUtils.copyProperties(project, projectDto);
-        // 将项目拉取到本地
+        // 将项目拉取到本地并创建目录
         processService.cloneRepo(project.getRepoUrl());
+        processService.createDir(project);
         return projectDto;
     }
 

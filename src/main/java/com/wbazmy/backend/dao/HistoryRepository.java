@@ -7,6 +7,7 @@ import com.wbazmy.backend.model.entity.History;
 import org.springframework.stereotype.Repository;
 
 import javax.annotation.Resource;
+import java.util.Objects;
 
 /**
  * @author Zhang Yang
@@ -46,7 +47,9 @@ public class HistoryRepository {
     public Page<History> pageHistory(Integer pageNum, Integer pageSize, Long projectId) {
         Page<History> page = new Page<>(pageNum, pageSize);
         QueryWrapper<History> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("project_id", projectId);
+        if (!Objects.isNull(projectId)) {
+            queryWrapper.eq("project_id", projectId);
+        }
         historyMapper.selectPage(page, queryWrapper);
         return page;
     }
