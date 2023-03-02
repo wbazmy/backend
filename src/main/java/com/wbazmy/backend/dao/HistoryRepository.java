@@ -7,6 +7,7 @@ import com.wbazmy.backend.model.entity.History;
 import org.springframework.stereotype.Repository;
 
 import javax.annotation.Resource;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -52,5 +53,11 @@ public class HistoryRepository {
         }
         historyMapper.selectPage(page, queryWrapper);
         return page;
+    }
+
+    public List<History> listHistory(Long projectId) {
+        QueryWrapper<History> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("project_id", projectId);
+        return historyMapper.selectList(queryWrapper);
     }
 }

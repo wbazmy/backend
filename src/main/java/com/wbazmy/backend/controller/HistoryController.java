@@ -1,9 +1,11 @@
 package com.wbazmy.backend.controller;
 
+import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.wbazmy.backend.constant.enums.ResponseCode;
 import com.wbazmy.backend.dao.ProjectRepository;
 import com.wbazmy.backend.model.dto.PageInfo;
 import com.wbazmy.backend.model.dto.ResponseResult;
+import com.wbazmy.backend.model.entity.Graph;
 import com.wbazmy.backend.model.entity.History;
 import com.wbazmy.backend.model.entity.Project;
 import com.wbazmy.backend.service.HistoryService;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -46,6 +49,16 @@ public class HistoryController {
         return ResponseResult.success(historyService.pageHistory(projectName, pageNum, pageSize));
     }
 
+    @GetMapping("/list")
+    @ResponseBody
+    public ResponseResult<List<History>> listHistory(@RequestParam String projectName) {
+        if (StringUtils.isBlank(projectName)) {
+            log.info("参数不足");
+            return ResponseResult.fail(ResponseCode.MISSCONTENT.getCode(), ResponseCode.MISSCONTENT.getMsg());
+        }
+        return ResponseResult.success(historyService.listHistory(projectName));
+    }
+
     @GetMapping("/info")
     @ResponseBody
     public ResponseResult<History> getHistory(@RequestParam Long historyId) {
@@ -59,6 +72,16 @@ public class HistoryController {
             return ResponseResult.fail(ResponseCode.HISTORYNOTEXIST.getCode(), ResponseCode.HISTORYNOTEXIST.getMsg());
         }
         return ResponseResult.success(history);
+    }
+
+    @GetMapping("/graph")
+    @ResponseBody
+    public ResponseResult<List<Graph>> getGraph(@RequestParam Long historyId, @RequestParam String projectName) {
+        if (Objects.isNull(historyId) || StringUtils.isBlank(projectName)) {
+            log.info("参数不足");
+            return ResponseResult.fail(ResponseCode.MISSCONTENT.getCode(), ResponseCode.MISSCONTENT.getMsg());
+        }
+        return ResponseResult.success(historyService.getGraph(historyId, projectName));
     }
 
     @GetMapping("/report_file")

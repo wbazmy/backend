@@ -1,7 +1,10 @@
 package com.wbazmy.backend.service;
 
 import com.wbazmy.backend.model.dto.PageInfo;
+import com.wbazmy.backend.model.entity.Graph;
 import com.wbazmy.backend.model.entity.History;
+
+import java.util.List;
 
 /**
  * @author Zhang Yang
@@ -13,7 +16,11 @@ public interface HistoryService {
 
     PageInfo<History> pageHistory(String projectName, Integer pageNum, Integer pageSize);
 
+    List<History> listHistory(String projectName);
+
     Boolean deleteHistory(Long id);
 
     History getHistory(Long id);
+
+    List<Graph> getGraph(Long id, String projectName);
 }
