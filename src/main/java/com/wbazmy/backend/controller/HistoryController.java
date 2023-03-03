@@ -93,9 +93,8 @@ public class HistoryController {
         }
 
         Project project = projectRepository.findById(projectId);
-        downLoadPath = downLoadPath + project.getProjectName() + "-" + project.getUserId() + "/";
         String fileName = "dep_error_" + historyId + ".csv";
-        String filePath = downLoadPath + fileName;
+        String filePath = downLoadPath + project.getProjectName() + "-" + project.getUserId() + "/" + fileName;
 //        String filePath = "C:\\Users\\23954\\Desktop\\1.csv";
         File file = new File(filePath);
         if (!file.exists()) {

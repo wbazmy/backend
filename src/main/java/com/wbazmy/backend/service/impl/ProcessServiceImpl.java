@@ -196,6 +196,35 @@ public class ProcessServiceImpl implements ProcessService {
     }
 
     @Override
+    public void pullRepo(String projectName) {
+        String repoPath = projectPath + projectName;
+        String gitPullCommand = "git pull --all"; // 要执行的 git pull 命令
+
+        // 构造 ProcessBuilder 对象，用于执行命令
+        ProcessBuilder pb = new ProcessBuilder("bash", "-c", "cd \"" + repoPath + "\" && " + gitPullCommand);
+        // 设置工作目录为指定目录
+        pb.directory(new File(repoPath));
+        try {
+            // 启动命令进程
+            Process process = pb.start();
+            // 读取命令输出
+            BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+            String line;
+            while ((line = reader.readLine()) != null) {
+                System.out.println(line);
+            }
+            // 等待命令执行完成
+            int exitCode = process.waitFor();
+            if (exitCode != 0) {
+                System.err.println("Error: command exited with code " + exitCode);
+                log.error("拉取仓库最新版本失败");
+            }
+        } catch (Exception e) {
+            log.error("error occurs",e);
+        }
+    }
+
+    @Override
     public void createDir(Project project) {
         String dirName = checkDataPath + project.getProjectName();
         File directory = new File(dirName);

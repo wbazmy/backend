@@ -7,6 +7,29 @@ spring:
   jackson:
     date-format: yyyy-MM-dd HH:mm:ss
     time-zone: GMT+8
+  quartz:
+    auto-startup: true
+    job-store-type: jdbc
+    wait-for-jobs-to-complete-on-shutdown: true
+    overwrite-existing-jobs: true
+    properties: # 添加 Quartz Scheduler 附加属性
+      org:
+        quartz:
+          scheduler:
+            # scheduler的实例名
+            instanceName: scheduler
+            instanceId: AUTO
+          threadPool:
+            threadCount: 10 # 线程池大小。默认为 10 。
+            threadPriority: 5 # 线程优先级
+            class: org.quartz.simpl.SimpleThreadPool
+          jobStore:
+            class: org.springframework.scheduling.quartz.LocalDataSourceJobStore
+            driverDelegateClass: org.quartz.impl.jdbcjobstore.StdJDBCDelegate
+            # 表示数据库中相关表是QRTZ_开头的
+            tablePrefix: QRTZ_
+            useProperties: false
+
 
 server:
   port: 8088

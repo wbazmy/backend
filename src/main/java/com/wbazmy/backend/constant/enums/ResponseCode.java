@@ -18,7 +18,7 @@ public enum ResponseCode {
     PROJECTNAMEEXIST(701, "Project name has existed"), PROJECTNAMENOTEXIST(702, "Project name not Exist"),
     HISTORYNOTEXIST(801, "History not Exist"), RULENAMEEXIST(901, "Rule name has existed"),
     RULENOTEXIST(902, "Rule not Exist"),BUILDMODEERROR(1001, "Build mode error"),
-    CHECKERROR(1002, "Check error");
+    CHECKERROR(1002, "Check error"),CRONJOBNAMEEXIST(1003, "Cron job Exist"),CRONJOBNOTEXIST(1004, "Cron job not Exist"),;
 
     private final Integer code;
 

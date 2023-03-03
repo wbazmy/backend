@@ -6,14 +6,15 @@ import lombok.Data;
 /**
  * @author Zhang Yang
  * @description
- * @date 2023/2/9 - 18:51
+ * @date 2023/3/3 - 11:32
  */
 @Data
-public class CheckRequest {
+public class CronJobRequest {
+    private String jobName;
+    private String jobType;
+    private String cronExpression;
+    private String projectName;
     private Long projectId;
     private BuildModeEnum buildMode;
-    private String commitId;
-    private String branch;
-    private Boolean isCronJob=Boolean.FALSE;
 
 }

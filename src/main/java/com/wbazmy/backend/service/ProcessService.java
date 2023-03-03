@@ -13,5 +13,7 @@ public interface ProcessService {
 
     void cloneRepo(String repoUrl);
 
+    void pullRepo(String projectName);
+
     void createDir(Project project);
 }

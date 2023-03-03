@@ -39,8 +39,11 @@ public class CheckServiceImpl implements CheckService {
 
     @Override
     public History depErrorCheck(CheckRequest request) {
-        History history = new History();
         Project project = projectRepository.findById(request.getProjectId());
+        if (StringUtils.isBlank(request.getBranch()) && StringUtils.isBlank(request.getCommitId())) {
+            processService.pullRepo(project.getProjectName());
+        }
+        History history = new History();
         history.setProjectId(request.getProjectId());
         history.setBuildMode(request.getBuildMode());
         history.setStartTime(new Date());
@@ -53,12 +56,16 @@ public class CheckServiceImpl implements CheckService {
         }
         history.setHeadCommitId(headCommitId);
         if (StringUtils.isBlank(project.getLastCommitId()) && request.getBuildMode().equals(BuildModeEnum.INCREMENTAL_BUILD)) {
-            history.setEndTime(new Date());
-            history.setDuration(0);
-            history.setCheckStatus(CheckStatusEnum.FAILED);
-            history.setBaseCommitId(headCommitId);
-            historyRepository.save(history);
-            return history;
+            if (!request.getIsCronJob()) {
+                history.setEndTime(new Date());
+                history.setDuration(0);
+                history.setCheckStatus(CheckStatusEnum.FAILED);
+                history.setBaseCommitId(headCommitId);
+                historyRepository.save(history);
+                return history;
+            } else {
+                history.setBuildMode(BuildModeEnum.CLEAN_BUILD);
+            }
         }
         history.setCheckStatus(CheckStatusEnum.CHECKING);
         if (request.getBuildMode().equals(BuildModeEnum.INCREMENTAL_BUILD)) {

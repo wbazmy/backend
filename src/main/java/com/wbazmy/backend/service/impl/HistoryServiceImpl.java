@@ -88,6 +88,7 @@ public class HistoryServiceImpl implements HistoryService {
     public List<Graph> getGraph(Long id, String projectName) {
         String userName = UserContextUtil.getCurrentUserName();
         Long userId = userRepository.findByUserName(userName).getId();
+        //todo 待修改
 //        String staticFileName = historyDataPath + projectName + "-" + userId + "/" + "static_graph" + "_" + id + ".txt";
         String staticFileName = "D:\\学习\\实验室\\研究生毕设\\static_graph_30.txt";
 //        String actualFileName = historyDataPath + projectName + "-" + userId + "/" + "actual_graph" + "_" + id + ".txt";
